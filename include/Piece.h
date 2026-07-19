@@ -10,9 +10,9 @@ class Piece {
     PieceType type;
     bool hasMoved = false;
 
+public:
     Piece(Color c, PieceType t) :
         color(c), type(t) {}
-    virtual ~Piece() = default;
-
-    virtual vector<Move> getPseudoLegalMoves(Position from, const Board& board) const = 0;
+        virtual ~Piece() = default;
+        virtual vector<Move> getPseudoLegalMoves(Position from, const Board& board) const = 0;
 };
