@@ -1,0 +1,17 @@
+# Build artifacts
+build/
+main
+main.exe
+*.o
+*.obj
+
+# VS Code
+.vscode/
+
+# OS-specific
+Thumbs.db
+.DS_Store
+
+# Editor swap/backup files
+*.swp
+*~

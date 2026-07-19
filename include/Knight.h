@@ -5,6 +5,7 @@
 using namespace std;
 
 class Knight : public Piece {
+public:
     Knight(Color c) : Piece(c, PieceType::KNIGHT) {}
-    vector<Move> getPseudoLegalMoves(Position from, const Board& board) const override {}
+    vector<Move> getPseudoLegalMoves(Position from, const Board& board) const override;
 };

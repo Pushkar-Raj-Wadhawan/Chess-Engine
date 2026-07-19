@@ -1,7 +1,7 @@
 #pragma once
 
-enum Color {WHITE, BLACK};
-enum PieceType {PAWN, KNIGHT, BISHOP, ROOK, KING, QUEEN};
+enum class Color {WHITE, BLACK};
+enum class PieceType {PAWN, KNIGHT, BISHOP, ROOK, KING, QUEEN};
 
 struct Position {
     int row, col;
