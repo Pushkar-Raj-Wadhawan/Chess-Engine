@@ -3,7 +3,7 @@
 enum class Color {WHITE, BLACK};
 enum class PieceType {PAWN, KNIGHT, BISHOP, ROOK, KING, QUEEN};
 
-struct Position {
+struct Position {   
     int row, col;
     bool operator==(const Position& other) const {
         return row == other.row && col == other.col;
