@@ -1,7 +1,7 @@
 #include "../include/MoveUtils.h"
 
 vector<Move> getSlidingMoves(Position from, const Board& board, const Piece* piece, const vector<pair<int, int>>& directions) {
-    int r = from.row, c = from.col;
+    int r, c;
     vector<Move> moves;
     Color pieceColor = piece->getColor();
     PieceType pieceType = piece->getPieceType();
@@ -33,6 +33,37 @@ vector<Move> getSlidingMoves(Position from, const Board& board, const Piece* pie
             }
             r += dr; c += dc;
         }
+    }
+    return moves;
+}
+
+vector<Move> tryOffsets(Position from, const Board& board, const Piece* piece, const vector<pair<int, int>>& offsets) {
+    int r, c;
+    vector<Move> moves;
+    PieceType pieceType = piece->getPieceType();
+    Color pieceColor = piece->getColor();
+    for(auto &[dr, dc] : offsets) {
+        r = from.row + dr;
+        c = from.col + dc;
+        Position to {r, c};
+        Piece* targetPiece = board.getPieceAt(to);
+        if(targetPiece == nullptr) {
+            Move m;
+            m.from = from;
+            m.to = to;
+            m.movedPiece = pieceType;
+            moves.emplace_back(m);
+        }
+        else if(targetPiece->getColor() != pieceColor) {
+            Move m;
+            m.from = from;
+            m.to = to;
+            m.movedPiece = pieceType;
+            m.isCapture = true;
+            m.capturedPiece = targetPiece->getPieceType();
+            moves.emplace_back(m);
+        }
+        else continue;
     }
     return moves;
 }

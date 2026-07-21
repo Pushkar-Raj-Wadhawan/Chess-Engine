@@ -8,24 +8,25 @@ using namespace std;
 #include "../include/Bishop.h"
 #include "../include/Rook.h"
 #include "../include/Queen.h"
+#include "../include/King.h"
 
 int main() {
     Board board;
 
     Position center = {3, 3};
-    Position p1 = {7, 3};
-    Position p2 = {1, 5};
-    Position p3 = {1, 3};
+    Position p1 = {2, 3};
+    Position p2 = {4, 4};
+    // Position p3 = {1, 3};
 
     auto queen = make_unique<Queen>(Color::BLACK);
     auto bishop = make_unique<Bishop>(Color::WHITE);
-    auto knight = make_unique<Knight>(Color::WHITE);
-    auto rook = make_unique<Rook>(Color::BLACK);
+    auto king = make_unique<King>(Color::WHITE);
+    // auto rook = make_unique<Rook>(Color::BLACK);
 
-    board.placePieceAt(move(queen), center);
-    board.placePieceAt(move(knight), p2);
-    board.placePieceAt(move(bishop), p1);
-    board.placePieceAt(move(rook), p3);
+    board.placePieceAt(move(king), center);
+    board.placePieceAt(move(queen), p1);
+    board.placePieceAt(move(bishop), p2);
+    // board.placePieceAt(move(rook), p1);
 
     vector<Move> moves = board.getPieceAt(center)->getPseudoLegalMoves(center, board);
 
