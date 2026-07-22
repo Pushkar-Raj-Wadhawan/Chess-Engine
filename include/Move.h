@@ -1,7 +1,14 @@
 #pragma once
 
+#include <bits/stdc++.h>
+#include "Piece.h"
+
+using namespace std;
+
 enum class Color {WHITE, BLACK};
 enum class PieceType {PAWN, KNIGHT, BISHOP, ROOK, KING, QUEEN};
+
+class Piece;
 
 struct Position {   
     int row, col;
@@ -12,6 +19,12 @@ struct Position {
         return row >= 0 && col >= 0 && row < 8 && col < 8;
     }
 };
+
+struct UndoInfo {
+    unique_ptr<Piece> capturedPiece;
+    bool movedPieceHadMoved;
+};
+
 
 struct Move {
     Position from, to;

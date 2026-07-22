@@ -21,4 +21,10 @@ public:
     PieceType getPieceType() const {
         return this->type;
     }
+    bool getHasMoved() const {
+        return hasMoved;
+    }
+    void setHasMoved(bool flag) {
+        hasMoved = flag;
+    }
 };
