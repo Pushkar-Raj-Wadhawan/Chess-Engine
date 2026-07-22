@@ -56,5 +56,23 @@ bool Board::isInCheck(Color kingColor) {
         }
         if(kingPos.row != -1) break;
     }
+    if(kingPos == Position{-1, -1}) return false;
     return isSquareAttacked(kingPos, (kingColor == Color::WHITE ? Color::BLACK : Color::WHITE));
+}
+
+vector<Move> Board::getLegalMoves(Color color) {
+    vector<Move> legalMoves;
+    for(int r = 0; r < 8; r++) {
+        for(int c = 0; c < 8; c++) {
+            if(grid[r][c] == nullptr || grid[r][c]->getColor() != color) continue;
+            Position from {r, c};
+            vector<Move> pseudoMoves = grid[r][c]->getPseudoLegalMoves(from, *this);
+            for(auto& m : pseudoMoves) {
+                UndoInfo info = makeMove(m);
+                if(!isInCheck(color)) legalMoves.emplace_back(m);
+                undoMove(m, info);
+            }
+        }
+    }
+    return legalMoves;
 }

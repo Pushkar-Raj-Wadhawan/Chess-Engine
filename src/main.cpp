@@ -15,27 +15,31 @@ int main() {
     Board board;
 
     Position center = {3, 3};
-    Position p1 = {1, 6};
-    // Position p2 = {3, 1};
-    // Position p3 = {2, 2};
-    // Position p4 = {1, 1};
+    Position p1 = {1, 5};
+    Position p2 = {4, 2};
+    Position p3 = {5, 3};
+    Position p4 = {1, 1};
 
-    // auto knight = make_unique<Knight>(Color::BLACK);
-    // auto bishop = make_unique<Bishop>(Color::WHITE);
+    auto pawn = make_unique<Pawn>(Color::BLACK);
+    auto bishop = make_unique<Bishop>(Color::BLACK);
     auto king = make_unique<King>(Color::WHITE);
-    auto rook = make_unique<Rook>(Color::BLACK);
-    // auto pawn = make_unique<Pawn>(Color::BLACK);
+    auto rook = make_unique<Rook>(Color::WHITE);
+    auto rookB = make_unique<Rook>(Color::BLACK);
     // auto wPawn = make_unique<Pawn>(Color::WHITE);
 
     board.placePieceAt(move(rook), center);
-    // board.placePieceAt(move(queen), p1);
-    board.placePieceAt(move(king), p1);
-    // board.placePieceAt(move(rook), p2);
-    // board.placePieceAt(move(pawn), p4);
-    // board.placePieceAt(move(wPawn), p3);
+    board.placePieceAt(move(rookB), p4);
+    board.placePieceAt(move(king), p2);
+    board.placePieceAt(move(bishop), p1);
+    board.placePieceAt(move(pawn), p3);
+    // board.placePieceAt(move(knight), p1);
 
-    cout << board.isInCheck(Color::WHITE);
+    // cout << board.isInCheck(Color::WHITE);
 
+    // vector<Move> m1 = board.getPieceAt(center)->getPseudoLegalMoves(center, board);
+    vector<Move> m2 = board.getLegalMoves(Color::WHITE);
+    // cout << (m2.size() == m1.size() ? "1" : "0");
+ 
     // Move m;
     // m.from = center;
     // m.to = p1;
@@ -59,8 +63,8 @@ int main() {
 
     // vector<Move> moves = board.getPieceAt(p4)->getPseudoLegalMoves(p4, board);
 
-    // cout << "Possible Moves: " << (int)moves.size() << "\n";
-    // for(auto& move: moves) {
-    //     cout << move.to.row << ", " << move.to.col << (move.isCapture ? " [capture]\n" : "\n");
-    // }
+    cout << "Possible Moves: " << (int)m2.size() << "\n";
+    for(auto& move: m2) {
+        cout << move.to.row << ", " << move.to.col << (move.isCapture ? " [capture]\n" : "\n");
+    }
 }
