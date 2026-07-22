@@ -23,14 +23,19 @@ struct Position {
 struct UndoInfo {
     unique_ptr<Piece> capturedPiece;
     bool movedPieceHadMoved;
+    Position prevEnPassantTarget;
 };
 
 
 struct Move {
     Position from, to;
     PieceType movedPiece;
+
     bool isCapture = false;
     PieceType capturedPiece;
+
     bool isCastle = false;
     Position rookFrom, rookTo;
+
+    bool isEnPassant = false;
 };

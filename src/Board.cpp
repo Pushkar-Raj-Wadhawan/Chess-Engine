@@ -15,7 +15,24 @@ void Board::placePieceAt(unique_ptr<Piece> piece, Position pos) {
 
 UndoInfo Board::makeMove(const Move& m) {
     UndoInfo info;
+    info.prevEnPassantTarget = enPassantTarget;
     // unique ptr operations
+    // checking for enPassantAvailability for next move
+    if(m.movedPiece == PieceType::PAWN && abs(m.from.row-m.to.row) == 2) {
+        enPassantTarget = m.from;
+        enPassantTarget.row += (grid[m.from.row][m.from.col]->getColor() == Color::WHITE ? -1 : 1);
+    } else {
+        enPassantTarget = {-1, -1};
+    }
+
+    if(m.isEnPassant) {
+        info.capturedPiece = move(grid[m.from.row][m.to.col]);
+        info.movedPieceHadMoved = true;
+        grid[m.to.row][m.to.col] = move(grid[m.from.row][m.from.col]);
+        grid[m.to.row][m.to.col]->setHasMoved(true);
+        return info;
+    }
+
     info.capturedPiece = move(grid[m.to.row][m.to.col]);
     info.movedPieceHadMoved = grid[m.from.row][m.from.col]->getHasMoved();
     grid[m.to.row][m.to.col] = move(grid[m.from.row][m.from.col]);
@@ -25,13 +42,24 @@ UndoInfo Board::makeMove(const Move& m) {
         grid[m.rookTo.row][m.rookTo.col] = move(grid[m.rookFrom.row][m.rookFrom.col]);
         grid[m.rookTo.row][m.rookTo.col]->setHasMoved(true);
     }
+
+    
     return info;
 }
 
 void Board::undoMove(const Move& m, UndoInfo& info) {
+
+    if(m.isEnPassant) {
+        grid[m.from.row][m.to.col] = move(info.capturedPiece);
+        grid[m.from.row][m.from.col] = move(grid[m.to.row][m.to.col]);
+        enPassantTarget = info.prevEnPassantTarget;
+        return;
+    }
+
     grid[m.from.row][m.from.col] = move(grid[m.to.row][m.to.col]);
     grid[m.to.row][m.to.col] = move(info.capturedPiece);
     grid[m.from.row][m.from.col]->setHasMoved(info.movedPieceHadMoved);
+    enPassantTarget = info.prevEnPassantTarget;
 
     if(m.isCastle) {
         grid[m.rookFrom.row][m.rookFrom.col] = move(grid[m.rookTo.row][m.rookTo.col]);

@@ -33,7 +33,7 @@ vector<Move> Pawn::getPseudoLegalMoves(Position from, const Board& board) const 
             }
         }
 
-        // checking captures
+        // checking captures && enPassant
         to.row = r + dr;
         vector<int> dc = {-1, 1};
 
@@ -48,6 +48,14 @@ vector<Move> Pawn::getPseudoLegalMoves(Position from, const Board& board) const 
                     m.movedPiece = PieceType::PAWN;
                     m.isCapture = true;
                     m.capturedPiece = targetPiece->getPieceType();
+                    moves.emplace_back(m);
+                }
+                else if (to == board.enPassantTarget) {
+                    Move m;
+                    m.from = from;
+                    m.to = to;
+                    m.movedPiece = PieceType::PAWN;
+                    m.isEnPassant = true;
                     moves.emplace_back(m);
                 }
             }

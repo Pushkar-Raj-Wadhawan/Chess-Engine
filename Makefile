@@ -11,7 +11,8 @@ build/%.o: src/%.cpp | build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build:
-	mkdir -p build
+	if not exist build mkdir build
 
 clean:
-	rm -rf build $(TARGET) $(TARGET).exe
+	if exist build rmdir /s /q build
+	if exist main.exe del main.exem -rf build $(TARGET) $(TARGET).exe
