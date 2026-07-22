@@ -31,5 +31,6 @@ struct Move {
     PieceType movedPiece;
     bool isCapture = false;
     PieceType capturedPiece;
-    // some other things as well
+    bool isCastle = false;
+    Position rookFrom, rookTo;
 };

@@ -20,6 +20,11 @@ UndoInfo Board::makeMove(const Move& m) {
     info.movedPieceHadMoved = grid[m.from.row][m.from.col]->getHasMoved();
     grid[m.to.row][m.to.col] = move(grid[m.from.row][m.from.col]);
     grid[m.to.row][m.to.col]->setHasMoved(true);
+
+    if(m.isCastle) {
+        grid[m.rookTo.row][m.rookTo.col] = move(grid[m.rookFrom.row][m.rookFrom.col]);
+        grid[m.rookTo.row][m.rookTo.col]->setHasMoved(true);
+    }
     return info;
 }
 
@@ -27,9 +32,14 @@ void Board::undoMove(const Move& m, UndoInfo& info) {
     grid[m.from.row][m.from.col] = move(grid[m.to.row][m.to.col]);
     grid[m.to.row][m.to.col] = move(info.capturedPiece);
     grid[m.from.row][m.from.col]->setHasMoved(info.movedPieceHadMoved);
+
+    if(m.isCastle) {
+        grid[m.rookFrom.row][m.rookFrom.col] = move(grid[m.rookTo.row][m.rookTo.col]);
+        grid[m.rookFrom.row][m.rookFrom.col]->setHasMoved(false);
+    }
 }
 
-bool Board::isSquareAttacked(Position target, Color attacker) {
+bool Board::isSquareAttacked(Position target, Color attacker) const {
     for(int r = 0; r < 8; r++) {
         for(int c = 0; c < 8; c++) {
             if(grid[r][c] == nullptr || grid[r][c]->getColor() != attacker) continue;

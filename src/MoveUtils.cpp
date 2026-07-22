@@ -46,6 +46,7 @@ vector<Move> tryOffsets(Position from, const Board& board, const Piece* piece, c
         r = from.row + dr;
         c = from.col + dc;
         Position to {r, c};
+        if(!to.isValid()) continue;
         Piece* targetPiece = board.getPieceAt(to);
         if(targetPiece == nullptr) {
             Move m;

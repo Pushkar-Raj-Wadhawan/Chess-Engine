@@ -16,7 +16,7 @@ public:
     void placePieceAt(unique_ptr<Piece>, Position pos);
     UndoInfo makeMove(const Move& m);
     void undoMove(const Move& m, UndoInfo& info);
-    bool isSquareAttacked(Position target, Color attacker);
+    bool isSquareAttacked (Position target, Color attacker) const;
     bool isInCheck(Color c); // will check if c color king in check or not
     vector<Move> getLegalMoves(Color color);
 };
