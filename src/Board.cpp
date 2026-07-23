@@ -89,7 +89,7 @@ bool Board::isSquareAttacked(Position target, Color attacker) const {
         for(int c = 0; c < 8; c++) {
             if(grid[r][c] == nullptr || grid[r][c]->getColor() != attacker) continue;
             Position from{r, c};
-                if(grid[r][c]->getPieceType() == PieceType::KING) {
+            if(grid[r][c]->getPieceType() == PieceType::KING) {
                 static const vector<pair<int,int>> kingOffsets = {
                     {-1,0},{1,0},{0,-1},{0,1},{-1,-1},{-1,1},{1,-1},{1,1}
                 };
@@ -97,6 +97,12 @@ bool Board::isSquareAttacked(Position target, Color attacker) const {
                     Position to{r+dr, c+dc};
                     if (to == target) return true;
                 }
+                continue;
+            }
+            if(grid[r][c]->getPieceType() == PieceType::PAWN) {
+                int dr = (attacker == Color::WHITE ? -1 : 1);
+                Position d1{r+dr, c-1}, d2{r+dr, c+1};
+                if (d1 == target || d2 == target) return true;
                 continue;
             }
             vector<Move> moves = grid[r][c]->getPseudoLegalMoves(from, *this);

@@ -13,10 +13,13 @@ using namespace std;
 #include "../include/Pawn.h"
 
 int main() {
-     Board board;
-     board.setupStartingPosition();
-     cout << "Starting...\n";
-     long nodes = board.perft(1, Color::WHITE);
-     cout << "perft(1) = " << nodes << " (expected 20)\n";
-     cout << "hi";
+     for (int d = 1; d <= 5; d++) {
+          Board b;
+          b.setupStartingPosition();
+          auto start = chrono::high_resolution_clock::now();
+          long nodes = b.perft(d, Color::WHITE);
+          auto end = chrono::high_resolution_clock::now();
+          double seconds = chrono::duration<double>(end - start).count();
+          cout << "perft(" << d << ") = " << nodes << " in " << seconds << "s\n";
+     }
 }
