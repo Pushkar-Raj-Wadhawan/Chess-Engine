@@ -1,4 +1,8 @@
 #include "../include/MoveUtils.h"
+#include "../include/Queen.h"
+#include "../include/Rook.h"
+#include "../include/Bishop.h"
+#include "../include/Knight.h"
 
 vector<Move> getSlidingMoves(Position from, const Board& board, const Piece* piece, const vector<pair<int, int>>& directions) {
     int r, c;
@@ -67,4 +71,14 @@ vector<Move> tryOffsets(Position from, const Board& board, const Piece* piece, c
         else continue;
     }
     return moves;
+}
+
+unique_ptr<Piece> createPiece(PieceType type, Color color) {
+    switch (type) {
+        case PieceType::QUEEN: return make_unique<Queen>(color);
+        case PieceType::ROOK: return make_unique<Rook>(color);
+        case PieceType::BISHOP: return make_unique<Bishop>(color);
+        case PieceType::KNIGHT: return make_unique<Knight>(color);
+        default: return nullptr;
+    }
 }

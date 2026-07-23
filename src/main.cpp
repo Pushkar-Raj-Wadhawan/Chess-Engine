@@ -12,31 +12,42 @@ using namespace std;
 #include "../include/Pawn.h"
 
 int main() {
-    // Board board;
+    Board board;
 
     // // Position center = {3, 3};
-    // Position p1 = {1, 0};
-    // Position p2 = {3, 1};
+    Position p1 = {1, 0};
+    Position p2 = {0, 1};
     // Position p3 = {3, 0};
     // // Position p4 = {0, 7};
 
-    // auto pawn = make_unique<Pawn>(Color::BLACK);
+    auto pawn = make_unique<Pawn>(Color::WHITE);
     // // auto bishop = make_unique<Bishop>(Color::WHITE);
     // // auto king = make_unique<King>(Color::BLACK);
-    // // auto rook = make_unique<Rook>(Color::BLACK);
+    auto rook = make_unique<Rook>(Color::BLACK);
     // // auto rookB = make_unique<Rook>(Color::BLACK);
     // auto wPawn = make_unique<Pawn>(Color::WHITE);
 
-    // board.placePieceAt(move(pawn), p1);
-    // // board.placePieceAt(move(rookB), p4);
+    board.placePieceAt(move(pawn), p1);
+//     board.placePieceAt(move(rook), p2);
     // board.placePieceAt(move(wPawn), p2);
 
-    // Move m;
-    // m.from = p1;
-    // m.to = p3;
-    // m.movedPiece = PieceType::PAWN;
+    vector<Move> m1 = board.getLegalMoves(Color::WHITE); 
+    Move m;
+    m.from = p1;
+    m.to = {0, 0};
+    m.movedPiece = PieceType::PAWN;
+    m.isPromotion = true;
+    m.promotedTo = PieceType::QUEEN;
 
-    // board.makeMove(m);
+
+    UndoInfo info = board.makeMove(m);
+    if(board.getPieceAt({0,0})->getPieceType() == PieceType::QUEEN) cout << "Queen it is\n";
+
+     board.undoMove(m, info);
+    if(board.getPieceAt({0,0}) == nullptr) cout << "Queen it was\n";
+    if(board.getPieceAt({1, 0})->getPieceType() == PieceType::PAWN) cout << "Move undone\n";
+
+
     // // vector<Move> m1 = board.getPieceAt(p2)->getPseudoLegalMoves(p2, board);
 
     // Move enMove;
@@ -98,81 +109,9 @@ int main() {
 
     // vector<Move> moves = board.getPieceAt(p4)->getPseudoLegalMoves(p4, board);
 
-    // cout << "Possible Moves: " << (int)m1.size() << "\n";
-    // for(auto& move: m1) {
-    //     cout << move.to.row << ", " << move.to.col << (move.isCapture ? " [capture]\n" : "\n");
-    // // }
-    // Board board;
-    //     Position blackPawnStart = {1, 0};
-    //     Position whitePawnPos   = {3, 1};
-    //     Position knightPos      = {7, 1}; // used for the "unrelated move" in between
-
-    //     auto blackPawn = make_unique<Pawn>(Color::BLACK);
-    //     auto whitePawn = make_unique<Pawn>(Color::WHITE);
-    //     auto knight    = make_unique<Knight>(Color::WHITE);
-
-    //     board.placePieceAt(move(blackPawn), blackPawnStart);
-    //     board.placePieceAt(move(whitePawn), whitePawnPos);
-    //     board.placePieceAt(move(knight), knightPos);
-    // Move doubleStep;
-    //     doubleStep.from = blackPawnStart;
-    //     doubleStep.to = {3, 0};
-    //     doubleStep.movedPiece = PieceType::PAWN;
-    //     board.makeMove(doubleStep);
-
-    //     cout << "[Test a] After double-step, enPassantTarget = ("
-    //          << board.enPassantTarget.row << "," << board.enPassantTarget.col << ") "
-    //          << "(expected (2,0))\n";
-
-    //     // White plays a totally unrelated knight move — this should CLEAR enPassantTarget.
-    //     Move unrelatedMove;
-    //     unrelatedMove.from = knightPos;
-    //     unrelatedMove.to = {5, 2};
-    //     unrelatedMove.movedPiece = PieceType::KNIGHT;
-    //     board.makeMove(unrelatedMove);
-
-    //     cout << "[Test a] After unrelated move, enPassantTarget = ("
-    //          << board.enPassantTarget.row << "," << board.enPassantTarget.col << ") "
-    //          << "(expected (-1,-1))\n";
-
-    //     // Now check white pawn's pseudo-legal moves — en passant capture should NOT appear.
-    //     vector<Move> whitePawnMoves = board.getPieceAt(whitePawnPos)->getPseudoLegalMoves(whitePawnPos, board);
-    //     bool foundEnPassant = false;
-    //     for (auto& m : whitePawnMoves) {
-    //         if (m.isEnPassant) {
-    //             foundEnPassant = true;
-    //             cout << m.to.row << " " << board.enPassantTarget.row << "\n";
-    //         }
-    
-    //     }
-    //     cout << "[Test a] En passant move found: " << (foundEnPassant ? "YES (BUG!)" : "NO (correct)") << "\n\n";
-    
-
-    // ---------- Test (b): undo of a normal move shouldn't corrupt enPassantTarget ----------
-    {
-        Board board;
-        Position knightStart = {4, 4};
-        auto knight = make_unique<Knight>(Color::WHITE);
-        board.placePieceAt(move(knight), knightStart);
-
-        cout << "[Test b] Before any move, enPassantTarget = ("
-             << board.enPassantTarget.row << "," << board.enPassantTarget.col << ") "
-             << "(expected (-1,-1))\n";
-
-        Move normalMove;
-        normalMove.from = knightStart;
-        normalMove.to = {2, 3};
-        normalMove.movedPiece = PieceType::KNIGHT;
-
-        UndoInfo info = board.makeMove(normalMove);
-        cout << "[Test b] After normal move, enPassantTarget = ("
-             << board.enPassantTarget.row << "," << board.enPassantTarget.col << ") "
-             << "(expected (-1,-1))\n";
-
-        board.undoMove(normalMove, info);
-        cout << "[Test b] After undo, enPassantTarget = ("
-             << board.enPassantTarget.row << "," << board.enPassantTarget.col << ") "
-             << "(expected (-1,-1), NOT corrupted)\n";
-    } 
+    cout << "Possible Moves: " << (int)m1.size() << "\n";
+    for(auto& move: m1) {
+        cout << move.to.row << ", " << move.to.col << (move.isCapture ? " [capture]\n" : "\n");
+    }
 
 }

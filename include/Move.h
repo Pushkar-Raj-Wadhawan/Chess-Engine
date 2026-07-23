@@ -24,6 +24,7 @@ struct UndoInfo {
     unique_ptr<Piece> capturedPiece;
     bool movedPieceHadMoved;
     Position prevEnPassantTarget;
+    unique_ptr<Piece> promotedFromPawn;
 };
 
 
@@ -38,4 +39,7 @@ struct Move {
     Position rookFrom, rookTo;
 
     bool isEnPassant = false;
+
+    bool isPromotion = false;
+    PieceType promotedTo;
 };

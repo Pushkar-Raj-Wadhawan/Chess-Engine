@@ -12,3 +12,5 @@ vector<Move> getSlidingMoves(Position from, const Board& board, const Piece* pie
 
 // knight, king
 vector<Move> tryOffsets(Position from, const Board& board, const Piece* piece, const vector<pair<int, int>>& offsets);
+
+unique_ptr<Piece> createPiece(PieceType type, Color color);

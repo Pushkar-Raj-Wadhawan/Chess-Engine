@@ -1,4 +1,5 @@
 #include "../include/Board.h"
+#include "../include/MoveUtils.h"
 
 Board::Board() {}
 
@@ -42,6 +43,13 @@ UndoInfo Board::makeMove(const Move& m) {
         grid[m.rookTo.row][m.rookTo.col] = move(grid[m.rookFrom.row][m.rookFrom.col]);
         grid[m.rookTo.row][m.rookTo.col]->setHasMoved(true);
     }
+    if(m.isPromotion) {
+        Color c = grid[m.to.row][m.to.col]->getColor();
+        unique_ptr<Piece> promotedPiece = createPiece(m.promotedTo, c);
+        info.promotedFromPawn = move(grid[m.to.row][m.to.col]);
+        grid[m.to.row][m.to.col] = move(promotedPiece);
+        grid[m.to.row][m.to.col]->setHasMoved(true);
+    }
 
     
     return info;
@@ -54,6 +62,9 @@ void Board::undoMove(const Move& m, UndoInfo& info) {
         grid[m.from.row][m.from.col] = move(grid[m.to.row][m.to.col]);
         enPassantTarget = info.prevEnPassantTarget;
         return;
+    }
+    if(m.isPromotion) {
+        grid[m.to.row][m.to.col] = move(info.promotedFromPawn);
     }
 
     grid[m.from.row][m.from.col] = move(grid[m.to.row][m.to.col]);
