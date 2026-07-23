@@ -19,4 +19,7 @@ public:
     bool isSquareAttacked (Position target, Color attacker) const;
     bool isInCheck(Color c); // will check if c color king in check or not
     vector<Move> getLegalMoves(Color color);
+    void setupStartingPosition();
+
+    long perft(int depth, Color color);
 };

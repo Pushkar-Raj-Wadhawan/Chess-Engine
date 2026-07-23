@@ -1,5 +1,11 @@
 #include "../include/Board.h"
 #include "../include/MoveUtils.h"
+#include "../include/Pawn.h"
+#include "../include/Knight.h"
+#include "../include/Bishop.h"
+#include "../include/Rook.h"
+#include "../include/King.h"
+#include "../include/Queen.h"
 
 Board::Board() {}
 
@@ -83,6 +89,16 @@ bool Board::isSquareAttacked(Position target, Color attacker) const {
         for(int c = 0; c < 8; c++) {
             if(grid[r][c] == nullptr || grid[r][c]->getColor() != attacker) continue;
             Position from{r, c};
+                if(grid[r][c]->getPieceType() == PieceType::KING) {
+                static const vector<pair<int,int>> kingOffsets = {
+                    {-1,0},{1,0},{0,-1},{0,1},{-1,-1},{-1,1},{1,-1},{1,1}
+                };
+                for (auto& [dr, dc] : kingOffsets) {
+                    Position to{r+dr, c+dc};
+                    if (to == target) return true;
+                }
+                continue;
+            }
             vector<Move> moves = grid[r][c]->getPseudoLegalMoves(from, *this);
             for(auto& m: moves) {
                 if(m.to == target) return true;
@@ -124,4 +140,51 @@ vector<Move> Board::getLegalMoves(Color color) {
         }
     }
     return legalMoves;
+}
+
+void Board::setupStartingPosition() {
+    // pawns
+    for(int c = 0; c < 8; c++) {
+        placePieceAt(make_unique<Pawn>(Color::BLACK), {1, c});
+        placePieceAt(make_unique<Pawn>(Color::WHITE), {6, c});
+    }
+
+    // king
+    placePieceAt(make_unique<King>(Color::BLACK), {0, 4});
+    placePieceAt(make_unique<King>(Color::WHITE), {7, 4});
+
+    // queen
+    placePieceAt(make_unique<Queen>(Color::BLACK), {0, 3});
+    placePieceAt(make_unique<Queen>(Color::WHITE), {7, 3});
+
+    // rooks
+    placePieceAt(make_unique<Rook>(Color::BLACK), {0, 0});
+    placePieceAt(make_unique<Rook>(Color::BLACK), {0, 7});
+    placePieceAt(make_unique<Rook>(Color::WHITE), {7, 7});
+    placePieceAt(make_unique<Rook>(Color::WHITE), {7, 0});
+
+    // bishops
+    placePieceAt(make_unique<Bishop>(Color::BLACK), {0, 2});
+    placePieceAt(make_unique<Bishop>(Color::BLACK), {0, 5});
+    placePieceAt(make_unique<Bishop>(Color::WHITE), {7, 2});
+    placePieceAt(make_unique<Bishop>(Color::WHITE), {7, 5});
+
+    // knights
+    placePieceAt(make_unique<Knight>(Color::BLACK), {0, 1});
+    placePieceAt(make_unique<Knight>(Color::BLACK), {0, 6});
+    placePieceAt(make_unique<Knight>(Color::WHITE), {7, 1});
+    placePieceAt(make_unique<Knight>(Color::WHITE), {7, 6});
+}
+
+long Board::perft(int depth, Color color) {
+    if (depth == 0) return 1;
+    long nodes = 0;
+    vector<Move> legalMoves = getLegalMoves(color);
+    Color nextColor = (color == Color::WHITE ? Color::BLACK : Color::WHITE);
+    for (auto& m : legalMoves) {
+        UndoInfo info = makeMove(m);
+        nodes += perft(depth - 1, nextColor);
+        undoMove(m, info);
+    }
+    return nodes;
 }
